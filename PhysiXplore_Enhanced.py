@@ -1318,7 +1318,7 @@ def sims_electricity_circuit():
     st.markdown(
         """
         <div style='text-align:center; background-color:#e0f7fa; padding:20px; border-radius:10px; font-family:"Poppins", sans-serif;'>
-        <h2 style='color:#006064; font-family:"Lobster", cursive;'>⚡ Complete Circuit Simulator</h2>
+        <h2 style='color:#006064; font-family:"Lobster", cursive;'>⚡ Circuit Simulator</h2>
         <p style='font-size:16px; line-height:1.5'>
         Build a realistic circuit and understand <b>Ohm's Law (V = IR)</b> with step-by-step explanations!<br>
         Watch electrons flow, see power dissipation, and learn how circuits work.
@@ -1685,5 +1685,6 @@ elif page=="sims": page_simulations()
 
 footer()
                     
+
 
 
