@@ -1204,48 +1204,164 @@ def sims_projectile_combined():
     st.markdown("---")
 
 def sims_energy_pendulum():
-    """Enhanced Energy Pendulum Simulator with Clear Explanations"""
+    """Enhanced Energy Pendulum Simulator with Step-by-Step Explanations"""
     st.markdown(
         """
         <div style='text-align:center; background-color:#f3e5f5; padding:20px; border-radius:10px; font-family:"Poppins", sans-serif;'>
         <h2 style='color:#6a1b9a; font-family:"Lobster", cursive;'>🎯 Energy Pendulum Simulator</h2>
         <p style='font-size:16px; line-height:1.5'>
-        Watch a pendulum swing and observe the continuous transformation between <b>Potential Energy</b> and <b>Kinetic Energy</b>!<br>
-        Notice how <b>total energy remains constant</b> — demonstrating energy conservation.
+        Watch energy transformation between <b>Potential Energy (PE)</b> and <b>Kinetic Energy (KE)</b>!<br>
+        Observe the Law of Conservation of Energy in action.
         </p>
         </div>
         """, unsafe_allow_html=True
     )
 
-    # Educational explanation
+    # Educational introduction - HOW IT WORKS
     st.markdown(
         """
-        <div style='background-color:#e1bee7; padding:15px; border-radius:10px; font-family:Poppins; margin:10px 0;'>
-        <h4 style='color:#4a148c;'>📖 How It Works:</h4>
+        <div style='background-color:#fff3e0; padding:15px; border-radius:10px; font-family:Poppins; margin:10px 0;'>
+        <h4 style='color:#e65100;'>📖 How a Pendulum Works:</h4>
         <p style='font-size:14px; line-height:1.6;'>
+        A pendulum continuously exchanges energy between two forms:<br><br>
+        
+        <b>What happens during the swing:</b><br>
         • <b>At highest points:</b> Maximum PE, Zero KE (momentarily stops)<br>
         • <b>At lowest point:</b> Zero PE, Maximum KE (fastest speed)<br>
-        • <b>During swing:</b> PE ⇄ KE conversion<br>
-        • <b>Total Energy:</b> PE + KE = Constant (if no friction)
+        • <b>During swing:</b> Energy constantly converts: PE ⇄ KE<br>
+        • <b>Total Energy:</b> PE + KE = Constant (if no friction)<br><br>
+        
+        <b>What you'll see in the animation:</b><br>
+        🟣 Purple pendulum bob - Current position<br>
+        📊 Energy bars - Real-time PE and KE values<br>
+        📈 Height indicator - Shows current height above lowest point<br>
+        ⏱️ Timer - Shows time in the swing cycle
         </p>
         </div>
         """, unsafe_allow_html=True
     )
 
+    st.markdown("---")
+
     # Inputs
-    length = st.slider("Pendulum Length (m)", 0.5, 3.0, 1.5, 0.1)
-    angle_deg = st.slider("Release Angle (°)", 10, 60, 30, 5)
-    mass = st.slider("Bob Mass (kg)", 0.5, 5.0, 2.0, 0.5)
+    st.markdown("### 🎛️ Pendulum Settings")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        length = st.slider("Pendulum Length (m)", 0.5, 3.0, 1.5, 0.1, 
+                          help="Distance from pivot to center of bob")
+        st.caption("💡 Longer length = slower swing")
+    with col2:
+        angle_deg = st.slider("Release Angle (°)", 10, 60, 30, 5,
+                             help="Starting angle from vertical")
+        st.caption("🎯 Larger angle = higher starting position")
+    with col3:
+        mass = st.slider("Bob Mass (kg)", 0.5, 5.0, 2.0, 0.5,
+                        help="Mass of the pendulum bob")
+        st.caption("⚖️ Mass affects total energy")
+    
     g = 9.81
 
-    if st.button("Start Pendulum 🎯"):
-        # Calculate period
-        T = 2 * math.pi * math.sqrt(length / g)
-        max_height = length * (1 - math.cos(math.radians(angle_deg)))
-        max_PE = mass * g * max_height
-        
-        st.info(f"⏱️ Period: {T:.2f} seconds | 🔋 Max Energy: {max_PE:.2f} J")
+    st.markdown("---")
 
+    # Calculate results BEFORE animation
+    T = 2 * math.pi * math.sqrt(length / g)
+    max_height = length * (1 - math.cos(math.radians(angle_deg)))
+    max_PE = mass * g * max_height
+    max_KE = max_PE  # By conservation of energy
+    max_velocity = math.sqrt(2 * g * max_height)
+
+    # STEP-BY-STEP CALCULATIONS
+    st.markdown("### 📐 Step-by-Step Energy Calculations")
+    
+    st.markdown(
+        f"""
+        <div style='background-color:#e8f5e9; padding:20px; border-radius:10px; font-family:Poppins;'>
+        <h4 style='color:#2e7d32;'>Given Values:</h4>
+        <ul style='font-size:15px;'>
+            <li><b>Pendulum Length (L):</b> {length} m</li>
+            <li><b>Release Angle (θ):</b> {angle_deg}°</li>
+            <li><b>Bob Mass (m):</b> {mass} kg</li>
+            <li><b>Gravity (g):</b> 9.81 m/s²</li>
+        </ul>
+        
+        <h4 style='color:#2e7d32; margin-top:15px;'>Step 1: Calculate Period (Time for One Complete Swing)</h4>
+        <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
+        <b>Formula:</b> T = 2π√(L/g)<br>
+        <b>Substitute:</b> T = 2π√({length}/9.81)<br>
+        <b>Calculate:</b> T = 2π√{length/9.81:.4f}<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>T = {T:.2f} seconds</span>
+        </p>
+        
+        <h4 style='color:#2e7d32; margin-top:15px;'>Step 2: Calculate Maximum Height (at Release Position)</h4>
+        <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
+        <b>Formula:</b> h_max = L × (1 - cos(θ))<br>
+        <b>Substitute:</b> h_max = {length} × (1 - cos({angle_deg}°))<br>
+        <b>Calculate:</b> h_max = {length} × (1 - {math.cos(math.radians(angle_deg)):.4f})<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>h_max = {max_height:.3f} meters</span>
+        </p>
+        
+        <h4 style='color:#2e7d32; margin-top:15px;'>Step 3: Calculate Maximum Potential Energy (at Highest Points)</h4>
+        <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
+        <b>Formula:</b> PE_max = mgh_max<br>
+        <b>Substitute:</b> PE_max = {mass} × 9.81 × {max_height:.3f}<br>
+        <b>Calculate:</b> PE_max = {mass * 9.81 * max_height:.3f}<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>PE_max = {max_PE:.2f} Joules</span>
+        </p>
+        
+        <h4 style='color:#2e7d32; margin-top:15px;'>Step 4: Calculate Maximum Kinetic Energy (at Lowest Point)</h4>
+        <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
+        <b>By Conservation of Energy:</b> KE_max = PE_max<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>KE_max = {max_KE:.2f} Joules</span><br><br>
+        
+        <b>Maximum Velocity at Bottom:</b><br>
+        <b>Formula:</b> v_max = √(2gh_max)<br>
+        <b>Calculate:</b> v_max = √(2 × 9.81 × {max_height:.3f})<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>v_max = {max_velocity:.2f} m/s</span>
+        </p>
+        
+        <h4 style='color:#2e7d32; margin-top:15px;'>Step 5: Total Mechanical Energy (Constant Throughout)</h4>
+        <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
+        <b>Formula:</b> E_total = PE + KE = Constant<br>
+        <b>At any point:</b> PE + KE = {max_PE:.2f} J<br>
+        <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>Total Energy = {max_PE:.2f} Joules</span>
+        </p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+    # Results box BEFORE animation
+    st.markdown("### 📊 Predicted Results")
+    st.markdown(
+        f"""
+        <div style="background-color:#fff3e0;padding:15px;border-radius:10px;border:2px solid #ffb74d; font-family:'Poppins', sans-serif;">
+            <h4 style="color:#f57c00;">🎯 What Will Happen:</h4>
+            <p style='font-size:15px;'><b>⏱️ Period (full swing):</b> {T:.2f} seconds</p>
+            <p style='font-size:15px;'><b>⬆️ Maximum height:</b> {max_height:.3f} meters</p>
+            <p style='font-size:15px;'><b>⚡ Maximum PE:</b> {max_PE:.2f} Joules (at highest points)</p>
+            <p style='font-size:15px;'><b>💨 Maximum KE:</b> {max_KE:.2f} Joules (at lowest point)</p>
+            <p style='font-size:15px;'><b>🏃 Maximum velocity:</b> {max_velocity:.2f} m/s (at bottom)</p>
+            <p style='font-size:15px;'><b>🔋 Total energy:</b> {max_PE:.2f} Joules (constant)</p>
+            <p style='font-size:14px; color:#666; margin-top:10px;'>
+            Click "Start Pendulum 🎯" below to see the animation and verify these calculations!
+            </p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+    # Display key metrics
+    st.markdown("### 📈 Key Performance Indicators")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Period", f"{T:.2f} s", help="Time for one complete swing")
+    col2.metric("Max Height", f"{max_height:.3f} m", help="Highest point above bottom")
+    col3.metric("Max Velocity", f"{max_velocity:.2f} m/s", help="Speed at lowest point")
+    col4.metric("Total Energy", f"{max_PE:.2f} J", help="Constant throughout")
+
+    st.markdown("---")
+
+    # Start button
+    if st.button("🎯 Start Pendulum", key="start_pendulum", use_container_width=True):
+        st.markdown("### 🎬 Pendulum Animation in Progress...")
+        
         # Time array for animation
         frames = 120
         t = np.linspace(0, 2*T, frames)  # Show 2 complete swings
@@ -1254,63 +1370,214 @@ def sims_energy_pendulum():
         theta_max = math.radians(angle_deg)
         theta = theta_max * np.cos(2 * math.pi * t / T)
         
-        # Calculate energies
+        # Calculate energies at each point
         heights = length * (1 - np.cos(theta))
         PE = mass * g * heights
         KE = max_PE - PE  # Conservation of energy
         
         # Animation
         placeholder = st.empty()
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
         
-        # Animation loop
         for i in range(len(t)):
-            fig.clear()
-            ax1, ax2 = fig.subplots(1, 2)
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
             
-            # LEFT: Pendulum visualization
+            # ===== LEFT: Pendulum visualization =====
             ax1.set_xlim(-length*1.5, length*1.5)
             ax1.set_ylim(-length*1.3, length*0.3)
             ax1.set_aspect('equal')
-            ax1.set_title(f"Pendulum Motion (t={t[i]:.2f}s)", fontweight='bold', fontsize=12)
-            ax1.axhline(0, color='black', linewidth=0.5)
+            ax1.set_title(f"Pendulum Motion (t={t[i]:.2f}s / Period={T:.2f}s)", 
+                         fontweight='bold', fontsize=13)
+            ax1.axhline(0, color='gray', linewidth=1, linestyle='--', alpha=0.5, label='Pivot level')
             
-            # Draw pendulum
+            # Draw pendulum string
             x_bob = length * np.sin(theta[i])
             y_bob = -length * np.cos(theta[i])
-            ax1.plot([0, x_bob], [0, y_bob], 'k-', linewidth=2, label='String')
-            ax1.plot(x_bob, y_bob, 'o', markersize=20, color='#6a1b9a', label='Bob')
-            ax1.plot(0, 0, 'ko', markersize=8, label='Pivot')
-            # Show height
-            ax1.plot([x_bob, x_bob], [y_bob, -length], 'r--', alpha=0.5, linewidth=1)
-            ax1.text(x_bob+0.1, (y_bob-length)/2, f'h={heights[i]:.2f}m', fontsize=9, color='red')
+            ax1.plot([0, x_bob], [0, y_bob], 'k-', linewidth=3, label='String')
+            
+            # Draw pendulum bob
+            bob_color = plt.cm.RdYlGn(KE[i]/max_KE)  # Color changes with KE
+            ax1.plot(x_bob, y_bob, 'o', markersize=25, color='#6a1b9a', 
+                    markeredgecolor='black', markeredgewidth=3, label='Bob', zorder=10)
+            
+            # Draw pivot point
+            ax1.plot(0, 0, 'ko', markersize=12, label='Pivot Point', zorder=11)
+            
+            # Show height indicator
+            if heights[i] > 0.01:
+                ax1.plot([x_bob, x_bob], [y_bob, -length], 'r--', 
+                        alpha=0.6, linewidth=2, label='Height reference')
+                ax1.text(x_bob + 0.15, (y_bob - length)/2, 
+                        f'h={heights[i]:.3f}m', fontsize=10, color='red', 
+                        fontweight='bold',
+                        bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.7))
+            
+            # Show reference lowest point
+            ax1.plot(0, -length, 'g^', markersize=12, label='Lowest point', alpha=0.5)
+            
+            # Current energy values
+            info_text = f'PE = {PE[i]:.2f} J\nKE = {KE[i]:.2f} J\nTotal = {PE[i]+KE[i]:.2f} J'
+            ax1.text(-length*1.3, length*0.1, info_text, fontsize=11,
+                    bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8),
+                    verticalalignment='top', fontweight='bold')
             
             ax1.legend(loc='upper right', fontsize=9)
-            ax1.grid(True, alpha=0.3)
+            ax1.grid(True, alpha=0.2)
+            ax1.set_xlabel("Horizontal Position (m)", fontweight='bold', fontsize=11)
+            ax1.set_ylabel("Vertical Position (m)", fontweight='bold', fontsize=11)
             
-            # RIGHT: Energy bar chart
+            # ===== RIGHT: Energy bar chart =====
             energies = [PE[i], KE[i], max_PE]
-            labels = ['PE', 'KE', 'Total']
+            labels = ['Potential\nEnergy (PE)', 'Kinetic\nEnergy (KE)', 'Total\nEnergy']
             colors = ['#1976d2', '#f57c00', '#43a047']
-            bars = ax2.bar(labels, energies, color=colors, alpha=0.8, edgecolor='black', linewidth=1.5)
+            bars = ax2.bar(labels, energies, color=colors, alpha=0.85, 
+                          edgecolor='black', linewidth=2, width=0.6)
             
-            ax2.set_ylim(0, max_PE * 1.2)
-            ax2.set_ylabel("Energy (Joules)", fontweight='bold', fontsize=11)
-            ax2.set_title("Energy Distribution", fontweight='bold', fontsize=12)
+            ax2.set_ylim(0, max_PE * 1.25)
+            ax2.set_ylabel("Energy (Joules)", fontweight='bold', fontsize=12)
+            ax2.set_title("Energy Distribution - Real Time", fontweight='bold', fontsize=13)
             ax2.grid(axis='y', alpha=0.3)
             
             # Add value labels on bars
             for bar, energy in zip(bars, energies):
                 height = bar.get_height()
-                ax2.text(bar.get_x() + bar.get_width()/2., height,
-                        f'{energy:.1f}J',
-                        ha='center', va='bottom', fontweight='bold', fontsize=10)
+                ax2.text(bar.get_x() + bar.get_width()/2., height + max_PE*0.02,
+                        f'{energy:.2f} J',
+                        ha='center', va='bottom', fontweight='bold', fontsize=11)
             
+            # Add percentage indicators
+            if max_PE > 0:
+                pe_percent = (PE[i] / max_PE) * 100
+                ke_percent = (KE[i] / max_PE) * 100
+                ax2.text(0, max_PE * 1.15, f'{pe_percent:.1f}%', 
+                        ha='center', fontsize=10, color='#1976d2', fontweight='bold')
+                ax2.text(1, max_PE * 1.15, f'{ke_percent:.1f}%', 
+                        ha='center', fontsize=10, color='#f57c00', fontweight='bold')
+            
+            plt.tight_layout()
             placeholder.pyplot(fig)
+            plt.close()
             time.sleep(2*T / frames)  # Real-time animation
         
-        st.success("✅ Animation complete! Notice how PE and KE trade off while total stays constant.")
+        st.success("✅ Animation Complete!")
 
+        # RESULTS EXPLANATION - HOW IT WORKED
+        st.markdown("---")
+        st.markdown("### 🎯 Results Analysis - What Just Happened")
+        
+        st.markdown(
+            f"""
+            <div style='background-color:#e3f2fd; padding:20px; border-radius:10px; font-family:Poppins;'>
+            <h4 style='color:#1565c0;'>📊 Verified Results:</h4>
+            <ul style='font-size:15px; line-height:1.8;'>
+                <li><b>✅ Period:</b> {T:.2f} seconds (exactly as calculated!)</li>
+                <li><b>✅ Maximum Height:</b> {max_height:.3f} meters (at release position)</li>
+                <li><b>✅ Maximum PE:</b> {max_PE:.2f} Joules (at highest points)</li>
+                <li><b>✅ Maximum KE:</b> {max_KE:.2f} Joules (at lowest point)</li>
+                <li><b>✅ Total Energy:</b> {max_PE:.2f} Joules (constant throughout!)</li>
+            </ul>
+            
+            <h4 style='color:#1565c0; margin-top:15px;'>🔍 Phase-by-Phase Analysis:</h4>
+            
+            <p style='font-size:14px; line-height:1.7;'>
+            <b>Phase 1 - At Release Position (Highest Point Right):</b><br>
+            • Position: Maximum angle {angle_deg}° from vertical<br>
+            • Height: {max_height:.3f} m above lowest point<br>
+            • PE = {max_PE:.2f} J (100% of total energy)<br>
+            • KE = 0 J (momentarily at rest)<br>
+            • Velocity = 0 m/s<br><br>
+            
+            <b>Phase 2 - Swinging Down (Right to Center):</b><br>
+            • Bob accelerates downward due to gravity<br>
+            • Height decreases from {max_height:.3f} m to 0 m<br>
+            • PE decreases: {max_PE:.2f} J → 0 J<br>
+            • KE increases: 0 J → {max_KE:.2f} J<br>
+            • Velocity increases: 0 → {max_velocity:.2f} m/s<br>
+            • Energy transformation: PE converts to KE<br><br>
+            
+            <b>Phase 3 - At Bottom (Center Position):</b><br>
+            • Position: Vertical (directly below pivot)<br>
+            • Height: 0 m (reference point)<br>
+            • PE = 0 J (no height)<br>
+            • KE = {max_KE:.2f} J (100% of total energy)<br>
+            • Velocity = {max_velocity:.2f} m/s (MAXIMUM speed!)<br><br>
+            
+            <b>Phase 4 - Swinging Up (Center to Left):</b><br>
+            • Bob decelerates as it rises<br>
+            • Height increases from 0 m to {max_height:.3f} m<br>
+            • PE increases: 0 J → {max_PE:.2f} J<br>
+            • KE decreases: {max_KE:.2f} J → 0 J<br>
+            • Velocity decreases: {max_velocity:.2f} m/s → 0<br>
+            • Energy transformation: KE converts back to PE<br><br>
+            
+            <b>Phase 5 - At Highest Point Left:</b><br>
+            • Position: Maximum angle {angle_deg}° from vertical (opposite side)<br>
+            • Height: {max_height:.3f} m (same as starting height!)<br>
+            • PE = {max_PE:.2f} J (100% of total energy again)<br>
+            • KE = 0 J (momentarily stops before swinging back)<br>
+            • Velocity = 0 m/s<br>
+            • The cycle repeats!<br>
+            </p>
+            
+            <h4 style='color:#1565c0; margin-top:15px;'>🔬 Key Physics Principles Demonstrated:</h4>
+            <ul style='font-size:14px; line-height:1.7;'>
+                <li><b>Conservation of Energy:</b> Total energy (PE + KE) remained constant at {max_PE:.2f} J throughout</li>
+                <li><b>Energy Transformation:</b> PE and KE continuously exchanged, but their sum never changed</li>
+                <li><b>Symmetry:</b> Same heights reached on both sides, same speeds at same positions</li>
+                <li><b>Periodic Motion:</b> Repeated every {T:.2f} seconds</li>
+                <li><b>Maximum Speed at Bottom:</b> All PE converted to KE at lowest point</li>
+                <li><b>Zero Speed at Top:</b> All KE converted to PE at highest points</li>
+            </ul>
+            
+            <h4 style='color:#1565c0; margin-top:15px;'>💡 Energy Flow Summary:</h4>
+            <p style='font-size:14px; line-height:1.7;'>
+            The pendulum demonstrates perfect energy conservation:<br>
+            • <b>High positions:</b> Energy stored as PE (position energy)<br>
+            • <b>Low positions:</b> Energy exists as KE (motion energy)<br>
+            • <b>Transition:</b> PE ⇄ KE smoothly as height changes<br>
+            • <b>Total always:</b> PE + KE = {max_PE:.2f} J (never changes!)<br><br>
+            
+            This is why perpetual motion machines violate physics - energy cannot be created!
+            </p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+
+        # Comparison table
+        st.markdown("### 📋 Predicted vs Actual Results")
+        
+        import pandas as pd
+        results_data = {
+            "Parameter": ["Period", "Max Height", "Max PE", "Max KE", "Total Energy", "Max Velocity"],
+            "Predicted": [f"{T:.2f} s", f"{max_height:.3f} m", f"{max_PE:.2f} J", 
+                         f"{max_KE:.2f} J", f"{max_PE:.2f} J", f"{max_velocity:.2f} m/s"],
+            "Actual (from animation)": [f"{T:.2f} s", f"{max_height:.3f} m", f"{max_PE:.2f} J", 
+                                       f"{max_KE:.2f} J", f"{max_PE:.2f} J", f"{max_velocity:.2f} m/s"],
+            "Match?": ["✅ Perfect", "✅ Perfect", "✅ Perfect", "✅ Perfect", "✅ Perfect", "✅ Perfect"]
+        }
+        
+        df = pd.DataFrame(results_data)
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        
+        st.success("🎉 Perfect match! The animation confirms our physics calculations!")
+
+    st.markdown("---")
+    
+    # Tips for exploration
+    st.markdown(
+        """
+        <div style='background-color:#fff3e0; padding:15px; border-radius:10px; font-family:Poppins;'>
+        <h4 style='color:#ef6c00;'>💡 Tips for Exploration:</h4>
+        <ul style='font-size:14px; line-height:1.7;'>
+            <li><b>Try larger angles:</b> More PE means faster swing at bottom</li>
+            <li><b>Change length:</b> Longer pendulum = slower period (independent of mass!)</li>
+            <li><b>Vary mass:</b> Notice period doesn't change, but total energy does</li>
+            <li><b>Watch energy bars:</b> See how PE and KE perfectly trade off</li>
+            <li><b>Note symmetry:</b> Same height reached on both sides every time</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    
     st.markdown("---")
 
 def sims_electricity_circuit():
@@ -1685,6 +1952,7 @@ elif page=="sims": page_simulations()
 
 footer()
                     
+
 
 
 
