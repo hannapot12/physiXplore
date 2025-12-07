@@ -968,7 +968,7 @@ def sims_projectile_combined():
     st.markdown("### 🎛️ Launch Settings")
     col1, col2 = st.columns(2)
     with col1:
-        v0 = st.slider("Initial speed (m/s)", 5, 50, 20, help="How fast the projectile launches")
+        Vi = st.slider("Initial speed (m/s)", 5, 50, 20, help="How fast the projectile launches")
         st.caption("💡 Higher speed = longer flight & greater distance")
     with col2:
         angle_deg = st.slider("Angle (°)", 10, 80, 45, help="Launch angle from horizontal")
@@ -980,9 +980,9 @@ def sims_projectile_combined():
 
     # Calculate results BEFORE animation
     theta = math.radians(angle_deg)
-    t_flight = 2 * v0 * math.sin(theta) / g
-    H_max = (v0**2 * math.sin(theta)**2) / (2 * g)
-    R = (v0**2 * math.sin(2*theta)) / g
+    t_flight = 2 * Vi * math.sin(theta) / g
+    H_max = (Vi**2 * math.sin(theta)**2) / (2 * g)
+    R = (Vi**2 * math.sin(2*theta)) / g
 
     # STEP-BY-STEP CALCULATIONS
     st.markdown("### 📐 Step-by-Step Calculations")
@@ -992,32 +992,32 @@ def sims_projectile_combined():
         <div style='background-color:#e8f5e9; padding:20px; border-radius:10px; font-family:Poppins;'>
         <h4 style='color:#2e7d32;'>Given Values:</h4>
         <ul style='font-size:15px;'>
-            <li><b>Initial Speed (v₀):</b> {v0} m/s</li>
+            <li><b>Initial Speed (Vi):</b> {Vi} m/s</li>
             <li><b>Launch Angle (θ):</b> {angle_deg}°</li>
             <li><b>Gravity (g):</b> 9.81 m/s²</li>
         </ul>
         
         <h4 style='color:#2e7d32; margin-top:15px;'>Step 1: Calculate Time of Flight</h4>
         <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
-        <b>Formula:</b> t = (2 × v₀ × sin(θ)) / g<br>
-        <b>Substitute:</b> t = (2 × {v0} × sin({angle_deg}°)) / 9.81<br>
-        <b>Calculate:</b> t = (2 × {v0} × {math.sin(theta):.4f}) / 9.81<br>
+        <b>Formula:</b> t = (2 × Vi × sin(θ)) / g<br>
+        <b>Substitute:</b> t = (2 × {Vi} × sin({angle_deg}°)) / 9.81<br>
+        <b>Calculate:</b> t = (2 × {Vi} × {math.sin(theta):.4f}) / 9.81<br>
         <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>t = {t_flight:.2f} seconds</span>
         </p>
         
         <h4 style='color:#2e7d32; margin-top:15px;'>Step 2: Calculate Maximum Height</h4>
         <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
-        <b>Formula:</b> H = (v₀² × sin²(θ)) / (2g)<br>
-        <b>Substitute:</b> H = ({v0}² × sin²({angle_deg}°)) / (2 × 9.81)<br>
-        <b>Calculate:</b> H = ({v0**2} × {math.sin(theta)**2:.4f}) / 19.62<br>
+        <b>Formula:</b> H = (Vi² × sin²(θ)) / (2g)<br>
+        <b>Substitute:</b> H = ({Vi}² × sin²({angle_deg}°)) / (2 × 9.81)<br>
+        <b>Calculate:</b> H = ({Vi**2} × {math.sin(theta)**2:.4f}) / 19.62<br>
         <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>H = {H_max:.2f} meters</span>
         </p>
         
         <h4 style='color:#2e7d32; margin-top:15px;'>Step 3: Calculate Range (Horizontal Distance)</h4>
         <p style='font-size:14px; font-family:monospace; background:#fff; padding:10px; border-radius:5px;'>
-        <b>Formula:</b> R = (v₀² × sin(2θ)) / g<br>
-        <b>Substitute:</b> R = ({v0}² × sin(2 × {angle_deg}°)) / 9.81<br>
-        <b>Calculate:</b> R = ({v0**2} × {math.sin(2*theta):.4f}) / 9.81<br>
+        <b>Formula:</b> R = (Vi² × sin(2θ)) / g<br>
+        <b>Substitute:</b> R = ({Vi}² × sin(2 × {angle_deg}°)) / 9.81<br>
+        <b>Calculate:</b> R = ({Vi**2} × {math.sin(2*theta):.4f}) / 9.81<br>
         <b>Result:</b> <span style='color:#d32f2f; font-size:18px;'>R = {R:.2f} meters</span>
         </p>
         </div>
@@ -1048,8 +1048,8 @@ def sims_projectile_combined():
         # Trajectory points
         frames = 100
         t = np.linspace(0, t_flight, frames)
-        x = v0 * np.cos(theta) * t
-        y = v0 * np.sin(theta) * t - 0.5 * g * t**2
+        x = Vi * np.cos(theta) * t
+        y = Vi * np.sin(theta) * t - 0.5 * g * t**2
 
         # Animation speed - matches actual physics time
         animation_speed = t_flight / frames
@@ -1069,7 +1069,7 @@ def sims_projectile_combined():
         point, = ax.plot([], [], 'bo', markersize=12, label="Projectile")
 
         # Max height marker
-        x_max_height = v0 * math.cos(theta) * (t_flight / 2)
+        x_max_height = Vi * math.cos(theta) * (t_flight / 2)
         ax.plot(x_max_height, H_max, 'go', markersize=12, label=f"Max Height ({H_max:.1f}m)", zorder=5)
         ax.axhline(H_max, color='green', linestyle='--', alpha=0.5, linewidth=2)
         ax.text(x_max_height + max(x)*0.05, H_max, f'{H_max:.2f}m', 
@@ -1952,6 +1952,7 @@ elif page=="sims": page_simulations()
 
 footer()
                     
+
 
 
 
